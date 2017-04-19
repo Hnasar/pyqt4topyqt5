@@ -2566,9 +2566,11 @@ class Main(object):
             files.sort()
             for f in files:
                 fname = os.path.join(root, f)
-                cnv = PyQt4ToPyQt5(fname, fname, self.log, self.nopyqt5)
-                cnv.setup()
-                self.write_diff_file(fname)
+                # Checking that it is a python file only
+                if self.is_python_file(fname):
+                    cnv = PyQt4ToPyQt5(fname, fname, self.log, self.nopyqt5)
+                    cnv.setup()
+                    self.write_diff_file(fname)
 
     def copy_dir(self, dest, orig, followlinks=False):
         self.copied = {}
@@ -2594,10 +2596,9 @@ class Main(object):
 
             for name in files:
                 src = os.path.join(root, name)
-                if self.is_python_file(src):
-                    cp = os.path.join(target, name)
-                    shutil.copy(src, cp)
-                    self.copied[cp] = src
+                cp = os.path.join(target, name)
+                shutil.copy(src, cp)
+                self.copied[cp] = src
 
     def read_filenames(self, path):
         try:
